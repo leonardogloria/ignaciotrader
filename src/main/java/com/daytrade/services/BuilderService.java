@@ -18,18 +18,17 @@ public class BuilderService {
         org.setName(String.format("Organization %s",id.toString()));
 
         Random r = new Random();
-        org.setStocks(getRandomNumberInRange(500,1000));
+        org.setStocks(getRandomNumberInRange(500,1_000));
+        org.setStockPrice(getRandomNumberInRange(10,101));
+        org.setOriginalStockNumber(org.getStocks());
         return org;
-
     }
     public Investor generateInvestors(Long id){
-        Investor investor = new Investor();
-        investor.setId(id);
-        investor.setName(String.format("Investor %s",id.toString()));
-        investor.setMoney(getRandomNumberInRange(1000,100000));
-
-        return investor;
-
+        //here i'm using the builder pattern to maintain the facility to create new objects.
+        return new Investor.Builder(id)
+                .withInitialBalance(getRandomNumberInRange(1_000,10_000))
+                .withName(String.format("Investor %s",id.toString()))
+                .build();
     }
     public Map<Integer,Stock> generateStockPrices(){
         HashMap<Integer, Stock> stockPrices = new HashMap<>();

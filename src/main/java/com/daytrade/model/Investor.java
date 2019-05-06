@@ -6,14 +6,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Investor {
+public class Investor implements Comparable <Investor > {
     private Long id;
     private String name;
     private int money;
     private Map<Long,Integer> actions =  new HashMap<Long,Integer>();
+    private Integer totalNumberOfAction = 0;
     public Long getId() {
         return id;
     }
+
+    public static class Builder {
+        private long id;
+        private int money;
+        private String name;
+
+        public Builder(Long id){
+            this.id = id;
+        }
+        public Builder withName(String name){
+            this.name = name;
+            return this;
+        }
+        public Builder withInitialBalance(int money){
+            this.money = money;
+            return this;
+        }
+        public Investor build(){
+            return new Investor(this);
+        }
+
+    }
+
+    private Investor(Builder builder){
+        this.money = builder.money;
+        this.id = builder.id;
+        this.name = builder.name;
+    }
+
     @Autowired
     TradeService tradeService;
 
@@ -50,6 +80,13 @@ public class Investor {
     public Map<Long, Integer> getActions() {
         return actions;
     }
+    public void plusAction(){
+        this.totalNumberOfAction++;
+    }
+
+    public Integer getTotalNumberOfAction() {
+        return totalNumberOfAction;
+    }
 
     @Override
     public String toString() {
@@ -57,6 +94,12 @@ public class Investor {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", money=" + money +
+                ", totalNumberOfAction=" + totalNumberOfAction +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Investor o) {
+        return this.totalNumberOfAction.compareTo(o.totalNumberOfAction);
     }
 }

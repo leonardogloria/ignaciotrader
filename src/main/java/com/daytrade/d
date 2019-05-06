@@ -1,0 +1,35 @@
+  int option = 0;
+        do {
+            System.out
+                    .println("\n\n### SISCOM - Sistema Comercial de Controle de Compras e Vendas ###");
+            System.out.println("\n                  =========================");
+            System.out.println("                  |     1 - Venda         |");
+            System.out.println("                  |     2 - Vendedor      |");
+            System.out.println("                  |     3 - Compra        |");
+            System.out.println("                  |     4 - Produto       |");
+            System.out.println("                  |     5 - Cliente       |");
+            System.out.println("                  |     6 - Fornecedor    |");
+            System.out.println("                  |     0 - Sair          |");
+            System.out.println("                  =========================\n");
+
+            Console con = System.console();
+            option = Integer.valueOf(con.readLine());
+
+            System.out.print("\n");
+            switch (option) {
+                case 1:
+                    break;
+                case 2:
+                    //fornecedor();
+                    break;
+                //case3 , 4  , etc...
+                case 5:
+                    //cliente();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opção Inválida!");
+                    break;
+            }
+        } while (option != 0);
