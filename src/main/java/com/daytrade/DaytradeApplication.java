@@ -1,8 +1,6 @@
 package com.daytrade;
 
 
-import com.daytrade.database.ConnectionFactory;
-import com.daytrade.model.GeneralOrganization;
 import com.daytrade.model.Investor;
 import com.daytrade.model.Organization;
 import com.daytrade.model.Stock;
@@ -17,9 +15,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.*;
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -34,8 +29,7 @@ public class DaytradeApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         System.out.println("Ready to comply!");
-        System.out.println("Creating the Sellers");
-
+        System.out.println("Creating the Sellers and Investors");
 
         List<Investor> investors = new ArrayList<>();
         List<Organization> organizations = new ArrayList<>();
@@ -45,32 +39,15 @@ public class DaytradeApplication implements CommandLineRunner {
                 index -> {
                     investors.add(this.builderServiceService.generateInvestors((long) index));
                     organizations.add(this.builderServiceService.generateOrganizations((long) index));
-
                 }
-
         );
-        stockPrices = this.builderServiceService.generateStockPrices();
-        for(int i = 0; i<100;i++){
-            this.tradeService.notSelledByTurn.add(organizations.get(i));
-
-        }
-        for (int i = 0; i < 100; i++) {
-            this.tradeService.investorsInGame.add(investors.get(i));
-        }
-        /*
-        investors.forEach(i -> System.out.println(i));
-        organizations.forEach(o -> System.out.println(o));
-        stockPrices.forEach((organization,stockPrice) ->{
-            System.out.println(organization + " " + stockPrice);
-        });
-        */
+        System.out.println("Running day trade, waiting!");
         int j = 0;
         external:
         while (true)  {
                 int i = new Random().nextInt((99 ) + 1);
                 this.tradeService.ammountOfTransactions++;
                 int org1 = new Random().nextInt((99) +1);
-                //System.out.println(investors.get(i).getName() + " is try to buy action from: " + organizations.get(org1).getName() + " by " +stockPrices.get(org1) );
                 int money = investors.get(i).getMoney();
 
                 if (money >=  organizations.get(org1).getStockPrice() && organizations.get(org1).getStocks() > 0 ) {
@@ -79,13 +56,10 @@ public class DaytradeApplication implements CommandLineRunner {
                     organizations.get(org1).sellAction();
                     this.tradeService.notSelledByTurn.remove(organizations.get(org1));
 
-
                     if(investors.get(i).getMoney() <= 0){
-                        System.out.println(investors.get(i).getName() + " is out of money + \n");
                         this.tradeService.investorsWithoutMoney.add(investors.get(i));
                     }
                     if(organizations.get(org1).getStocks() <= 0) {
-                        System.out.printf(organizations.get(org1).getName() + " is out of stock  \n");
                         this.tradeService.organizationsWithoutActions.add(organizations.get(org1));
                     }
                     if(organizations.get(org1).getAmountOfSells() == 10){
@@ -106,14 +80,11 @@ public class DaytradeApplication implements CommandLineRunner {
                     }
                 }
                 if(this.tradeService.investorsWithoutMoney.size() >= 100){
-                    System.out.println("Acabou o dinheiro de todos ============================= \n");
                     break external;
                 }
                 if(this.tradeService.organizationsWithoutActions.size() >= 100){
-                    System.out.printf("Acabou a quantidade de acoes ============================ \n");
                     break external;
                 }
-
 
             j++;
     }

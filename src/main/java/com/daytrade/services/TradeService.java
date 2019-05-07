@@ -99,12 +99,15 @@ public class TradeService {
         Comparator<Organization> comparator = Comparator.comparing(organization -> organization.getCapital());
         List<Organization> ordered = organizations.stream().sorted(comparator).collect(Collectors.toList());
 
-        for (Organization org : ordered) {
-            if (org.getCapital() <= valuable) {
+        /*
+        Using The Iterator pattern
+         */
+        Iterator<Organization> iterator = ordered.iterator();
+        while(iterator.hasNext()){
+            Organization org = iterator.next();
+            if (org.getCapital() <= valuable){
                 moreDiversificated.add(org);
                 valuable = org.getCapital();
-            }else {
-                break;
             }
         }
         return moreDiversificated;

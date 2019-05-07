@@ -3,6 +3,8 @@ package com.daytrade.model;
 import com.daytrade.services.TradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Random;
+
 public class Organization {
     private long id;
     private String name;
@@ -82,5 +84,12 @@ public class Organization {
                 ", stockPrice =" + getStockPrice() + '\'' +
                 ", capital =" + getCapital()  +
                 '}';
+    }
+
+
+
+    private int getRandomNumberInRange(int min, int max) {
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
     }
 }

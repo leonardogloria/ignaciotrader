@@ -24,7 +24,9 @@ public class BuilderService {
         return org;
     }
     public Investor generateInvestors(Long id){
-        //here i'm using the builder pattern to maintain the facility to create new objects.
+        // here i'm using the builder pattern to maintain the facility to create new objects.
+        // as the amount of arguments in the contributors grows, it becomes important to create ways
+        // of maintaining the ease and legibility of creating new objects.
         return new Investor.Builder(id)
                 .withInitialBalance(getRandomNumberInRange(1_000,10_000))
                 .withName(String.format("Investor %s",id.toString()))
