@@ -8,6 +8,8 @@ public class ReportFactory {
     public Report getReport(ReportType reportType ){
         if(reportType.equals(ReportType.CSV)){
             return new CsvReport();
+        }else if(reportType.equals(ReportType.H2)){
+            return new H2Report();
         }
         return new CsvReport();
     }

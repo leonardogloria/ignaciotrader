@@ -2,6 +2,7 @@ package com.daytrade.services;
 
 import com.daytrade.model.Investor;
 import com.daytrade.model.Organization;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -10,6 +11,8 @@ import java.util.stream.Stream;
 
 @Service
 public class TradeService {
+
+
     public int ammountOfTransactions = 0;
     public List<Organization> notSelledByTurn = new ArrayList<>();
 

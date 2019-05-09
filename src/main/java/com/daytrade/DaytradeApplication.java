@@ -1,6 +1,7 @@
 package com.daytrade;
 
 
+import com.daytrade.dao.ReportDao;
 import com.daytrade.model.Investor;
 import com.daytrade.model.Organization;
 import com.daytrade.model.Stock;
@@ -24,6 +25,9 @@ public class DaytradeApplication implements CommandLineRunner {
     BuilderService builderServiceService;
     @Autowired
     TradeService tradeService;
+    @Autowired
+    ReportDao reportDao;
+
 
 
     @Override
@@ -91,11 +95,6 @@ public class DaytradeApplication implements CommandLineRunner {
 
      menu(investors,organizations);
 
-
-
-
-
-
     }
     private void menu(List<Investor> investors, List<Organization> organizations){
         int option = 0;
@@ -110,6 +109,8 @@ public class DaytradeApplication implements CommandLineRunner {
             System.out.println("                  |     6 - Less Valuable Organization         |");
             System.out.println("                  |     7 - Number os Transactions             |");
             System.out.println("                  |     8 - Export Results  to CSV             |");
+            System.out.println("                  |     9 - Save to DB                         |");
+            System.out.println("                  |     10- List Db                            |");
             System.out.println("                  |     0 - Exit                               |");
             System.out.println("                  ================================================\n");
             Scanner scanner = new Scanner(System.in);
@@ -143,27 +144,20 @@ public class DaytradeApplication implements CommandLineRunner {
                     case 7:
                         System.out.println(tradeService.ammountOfTransactions);
                     case 8:
-                        ReportVO vo = new ReportVO();
-                        String moreActions = tradeService.getInvestorWithMoreActions(investors).get(0).getName();
-                        String minActions = tradeService.getInvestorWithLessActions(investors).get(0).getName();
-                        String maxDiversificated = tradeService.getMoreDiversificated(investors).get(0).getName();
-                        String minDiversificated = tradeService.getLessDiversificated(investors).get(0).getName();
-                        String  mostValuable = tradeService.getMostValuableOrganization(organizations).get(0)
-                                .getName();
-                        String  minValuable = tradeService.getLessValuableOrganization(organizations).get(0)
-                                .getName();
 
-
-                        vo.setMostActionNumber(moreActions);
-                        vo.setMostDiversificated(maxDiversificated);
-                        vo.setMostValuable(mostValuable);
-                        vo.setLessActionNumber(minActions);
-                        vo.setLessDiversificated(minDiversificated);
-                        vo.setLessValuable(minValuable);
-                        vo.setNumberOfTransactions(tradeService.ammountOfTransactions);
                         Report report = new ReportFactory().getReport(ReportType.CSV);
+                        ReportVO vo = createReportVO(investors,organizations);
                         report.writeReport(vo);
 
+                    case 9:
+                        Report h2Report = new ReportFactory().getReport(ReportType.H2);
+                        vo = createReportVO(investors,organizations);
+                        reportDao.saveReport(vo);
+
+                        break;
+                    case 10:
+                        reportDao.getLast().forEach(System.out::println);
+                        break;
                     case 0:
                         break;
                     default:
@@ -177,6 +171,28 @@ public class DaytradeApplication implements CommandLineRunner {
             }
         }while (option != 0) ;
 
+    }
+    private ReportVO createReportVO(List<Investor> investors, List<Organization> organizations){
+        ReportVO vo = new ReportVO();
+        String moreActions = tradeService.getInvestorWithMoreActions(investors).get(0).getName();
+        String minActions = tradeService.getInvestorWithLessActions(investors).get(0).getName();
+        String maxDiversificated = tradeService.getMoreDiversificated(investors).get(0).getName();
+        String minDiversificated = tradeService.getLessDiversificated(investors).get(0).getName();
+        String  mostValuable = tradeService.getMostValuableOrganization(organizations).get(0)
+                .getName();
+        String  minValuable = tradeService.getLessValuableOrganization(organizations).get(0)
+                .getName();
+
+
+        vo.setMostActionNumber(moreActions);
+        vo.setMostDiversificated(maxDiversificated);
+        vo.setMostValuable(mostValuable);
+        vo.setLessActionNumber(minActions);
+        vo.setLessDiversificated(minDiversificated);
+        vo.setLessValuable(minValuable);
+        vo.setNumberOfTransactions(tradeService.ammountOfTransactions);
+        vo.setDateTime(new Date());
+        return vo;
     }
 	public static void main(String[] args) {
 

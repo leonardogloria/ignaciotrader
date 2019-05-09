@@ -1,6 +1,17 @@
 package com.daytrade.vo;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.util.Date;
+
+@Entity
 public class ReportVO {
+    @Id @GeneratedValue
+    Long id;
+
     String mostValuable;
     String lessValuable;
     String mostDiversificated;
@@ -8,6 +19,7 @@ public class ReportVO {
     String mostActionNumber;
     String lessActionNumber;
     int numberOfTransactions;
+    Date dateTime;
 
     public String getMostValuable() {
         return mostValuable;
@@ -63,5 +75,28 @@ public class ReportVO {
 
     public void setNumberOfTransactions(int numberOfTransactions) {
         this.numberOfTransactions = numberOfTransactions;
+    }
+
+    public Date getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "ReportVO{" +
+                "id=" + id +
+                ", mostValuable='" + mostValuable + '\'' +
+                ", lessValuable='" + lessValuable + '\'' +
+                ", mostDiversificated='" + mostDiversificated + '\'' +
+                ", lessDiversificated='" + lessDiversificated + '\'' +
+                ", mostActionNumber='" + mostActionNumber + '\'' +
+                ", lessActionNumber='" + lessActionNumber + '\'' +
+                ", numberOfTransactions=" + numberOfTransactions +
+                ", dateTime=" + dateTime +
+                '}';
     }
 }
